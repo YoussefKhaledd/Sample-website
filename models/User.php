@@ -63,5 +63,36 @@ class User {
 
         return false;
     }
+
+
+    public static function isEmailTaken($conn, $email) {
+        $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->num_rows > 0;
+    }
+    
+    public static function isUsernameTaken($conn, $username) {
+        $stmt = $conn->prepare("SELECT id FROM users WHERE username = ?");
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->num_rows > 0;
+    }
+
+    public static function getProfile($conn, $userId) {
+        $stmt = $conn->prepare("
+            SELECT u.email, i.first_name, i.last_name
+            FROM users u
+            JOIN user_information i ON u.id = i.user_id
+            WHERE u.id = ?
+        ");
+        $stmt->bind_param("s", $userId);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_assoc();
+    }
+    
+    
 }
 ?>

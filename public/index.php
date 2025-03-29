@@ -2,6 +2,8 @@
 $request = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD'];
 $route = trim($request, '/');
+$route = explode('?', $route)[0]; 
+
 
 switch ($route) {
     case 'register':
@@ -21,9 +23,19 @@ switch ($route) {
         break;
 
     case 'dashboard':
-        require_once '../home/dashboard.php';
+        case 'home':
+            require_once '../views/home.php';
+            break;
+        
+        case 'logout':
+            require_once '../controllers/logout.php';
+            break;
+    case 'settings':
+        require_once '../views/settings.php';
         break;
-
+    case 'update_settings':
+        require_once '../controllers/update_settings.php';
+        break;
     case '':
         header("Location: /register");
         break;
